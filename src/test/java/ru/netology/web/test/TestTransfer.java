@@ -44,16 +44,31 @@ public class TestTransfer {
                 () -> assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard));
     }
 
+//     @Test
+//    void shouldGetErrorMessage() {
+//        var amount = generateInValidAmount(secondCardBalance);
+//        var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+//        transferPage.makeTransfer(String.valueOf(amount), secondCardinfo);
+//        transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания");
+//        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+//        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardinfo);
+//        assertAll(() -> transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания"),
+//                () -> assertEquals(firstCardBalance, actualBalanceFirstCard),
+//                () -> assertEquals(secondCardBalance, actualBalanceSecondCard));
+//    }
+
     @Test
-    void shouldGetErrorMessage() {
-        var amount = generateInValidAmount(secondCardBalance);
+    void transferMoneyFromSecondToFirst() {
+        var amount = generateValidAmount(secondCardBalance);
+        var expectedBalanceFirstCard = firstCardBalance + amount;
+        var expectedBalanceSecondCard = secondCardBalance - amount;
         var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
-        transferPage.makeTransfer(String.valueOf(amount), secondCardinfo);
-        transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания");
+        dashboardPage = transferPage.makValidTransfer(String.valueOf(amount), secondCardinfo);
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardinfo);
-        assertAll(() -> transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания"),
-                () -> assertEquals(firstCardBalance, actualBalanceFirstCard),
-                () -> assertEquals(secondCardBalance, actualBalanceSecondCard));
+
+        assertAll(() -> assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard),
+                () -> assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard));
     }
+
 }
